@@ -1,19 +1,19 @@
 package com.Task.Task.Controller;
 
+import com.Task.Task.Model.AssignTaskDTO;
 import com.Task.Task.Model.Project;
 import com.Task.Task.Model.Task;
 import com.Task.Task.Model.TaskUser;
 
 import com.Task.Task.Service.UserService;
 import jakarta.validation.Valid;
+import org.hibernate.annotations.SortComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -33,6 +33,21 @@ public class UserController {
     @PostMapping("/AddTask/{uid}/{pid}")
     public ResponseEntity<Task> AddTask(@RequestBody @Valid Task task, @PathVariable("uid") Integer uid, @PathVariable("pid") Integer pid){
         return new ResponseEntity<>(us.addTask(uid, pid, task), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/AssigningTask")
+    public ResponseEntity<AssignTaskDTO> assignTask(@RequestBody AssignTaskDTO atd){
+        return new ResponseEntity<>(us.assignTask(atd), HttpStatus.OK);
+    }
+
+    @GetMapping("/opentask/{uid}")
+    public ResponseEntity<List<Task>> getOpenTask(@PathVariable("uid") Integer uid){
+        return new ResponseEntity<>(us.openedTask(uid),HttpStatus.ACCEPTED);
+    }
+
+    @PatchMapping("/closetask")
+    public ResponseEntity<Task> closetask(@RequestBody AssignTaskDTO dto){
+        return new ResponseEntity<>(us.closeTask(dto),HttpStatus.ACCEPTED);
     }
 
 }

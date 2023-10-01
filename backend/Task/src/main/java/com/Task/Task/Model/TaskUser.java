@@ -34,14 +34,25 @@ public class TaskUser {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
+    @Size(min = 10, max = 12, message = "Invalid Mobile Number")
+    String phone;
+
+
     @NotNull(message = "Please Select Role")
     @NotBlank(message = "Please Select Role")
     String role;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    List<Task> assignedTasks = new ArrayList<>();
+    @OneToMany
+    List<TaskUser> followers = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany
+    List<TaskUser> following = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Task> assignedTasks = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)

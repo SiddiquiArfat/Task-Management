@@ -19,6 +19,15 @@ public class exception {
         return new ResponseEntity<>(ed, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> exception(Exception exception, WebRequest wr){
+        ErrorDetails ed = new ErrorDetails();
+        ed.setDescritpion(wr.getDescription(false));
+        ed.setMessage(exception.getMessage());
+        return new ResponseEntity<>(ed, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorDetails> noHandlerFoundException(Exception exception, WebRequest wr){
         ErrorDetails ed = new ErrorDetails();

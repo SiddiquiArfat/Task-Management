@@ -29,11 +29,12 @@ public class Project {
     @ManyToOne
     TaskUser admin;
 
-    @JsonIgnore
+
     @ManyToMany
     List<TaskUser> user = new ArrayList<>();
 
-    @JsonIgnore
+
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     List<Task> tasks = new ArrayList<>();
 
