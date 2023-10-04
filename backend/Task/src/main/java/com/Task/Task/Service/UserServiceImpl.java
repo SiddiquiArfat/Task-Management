@@ -1,9 +1,6 @@
 package com.Task.Task.Service;
 
-import com.Task.Task.Model.AssignTaskDTO;
-import com.Task.Task.Model.Project;
-import com.Task.Task.Model.Task;
-import com.Task.Task.Model.TaskUser;
+import com.Task.Task.Model.*;
 
 import com.Task.Task.Respository.ProjectRepository;
 import com.Task.Task.Respository.TaskRepository;
@@ -12,6 +9,7 @@ import com.Task.Task.exception.ProjectException;
 import com.Task.Task.exception.TaskException;
 import com.Task.Task.exception.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,11 +26,15 @@ public class UserServiceImpl  implements UserService{
     ProjectRepository pr;
     @Autowired
     TaskRepository tr;
-
+    @Autowired
+    PasswordEncoder pe;
     @Override
     public TaskUser addUser(TaskUser user) {
         Optional<TaskUser> opt = ur.findByUsername(user.getUsername());
         if(opt.isPresent()) throw new UserException("User Already Exist with this Email");
+
+        user.setPassword(pe.encode(user.getPassword()));
+
         return ur.save(user);
     }
 
@@ -132,11 +134,30 @@ public class UserServiceImpl  implements UserService{
         return ur.findByUsername(username).orElseThrow(()-> new UserException("User Not Found"));
     }
 
-    public TaskUser follow(Integer uid, AssignTaskDTO dto){
-
+    @Override
+    public TaskUser login(LoginDto dto) {
         TaskUser user = ur.findByUsername(dto.getUsername()).orElseThrow(()-> new UserException("User Not Found"));
 
+        if(!dto.getPassword().equals(user.getPassword())){
+            throw new UserException("Password Incorrect");
+        }
 
+        return user;
     }
+
+    @Override
+    public List<Project> getALlProject(Integer uid) {
+        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not found"));
+        List<Project> projects = user.getProject();
+        if(projects.isEmpty()) throw new ProjectException("Don't Have any project history");
+        return projects;
+    }
+
+//    public TaskUser follow(Integer uid, AssignTaskDTO dto){
+//
+//        TaskUser user = ur.findByUsername(dto.getUsername()).orElseThrow(()-> new UserException("User Not Found"));
+//
+//
+//    }
 
 }
