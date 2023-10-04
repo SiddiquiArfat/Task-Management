@@ -1,9 +1,6 @@
 package com.Task.Task.Service;
 
-import com.Task.Task.Model.AssignTaskDTO;
-import com.Task.Task.Model.Project;
-import com.Task.Task.Model.Task;
-import com.Task.Task.Model.TaskUser;
+import com.Task.Task.Model.*;
 
 import java.util.List;
 
@@ -28,6 +25,10 @@ public interface UserService {
     public List<Project> getAllProjects(Integer uid);
 
     public TaskUser searchByUsername(String username);
+
+    public TaskUser login(LoginDto dto);
+
+    public List<Project> getALlProject(Integer uid);
 
 
 

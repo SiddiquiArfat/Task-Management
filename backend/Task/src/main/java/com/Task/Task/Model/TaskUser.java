@@ -34,8 +34,8 @@ public class TaskUser {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
-    @Size(min = 10, max = 12, message = "Invalid Mobile Number")
-    String phone;
+//    @Size(min = 10, max = 12, message = "Invalid Mobile Number")
+//    String phone;
 
 
     @NotNull(message = "Please Select Role")

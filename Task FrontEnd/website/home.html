@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Visitations', { role: 'style' } ],
+          ['2030', 16, 'opacity: 0.2'],
+          ['2040', 22, 'stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF'],
+          ['2050', 28, 'stroke-color: #871B47; stroke-opacity: 0.6; stroke-width: 8; fill-color: #BC5679; fill-opacity: 0.2']
+        ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Total Projects completed",
+        width: 900,
+        height: 400,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+      chart.draw(view, options);
+  }
+    </script>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <h1 style="text-align: center;">Welcome to TaskPulse Dashboard</h1>
+
+    <h2>About Projects</h2>
+    <div id="barchart_values" style="width: 900px; height: 300px;"></div>
+
+    <h2 id="task">About Tasks</h2>
+    <div id="donutchart" style="width: 900px; height: 500px;"></div>
+
+    <div id="footer-placeholder"></div>
+
+</body>
+<script src="home.js"></script>
+</html>

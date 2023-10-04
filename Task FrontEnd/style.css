@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700;800&family=Poppins:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@500&display=swap');
+
+/* Reset some default styles for consistency */
+body, ul {
+    margin: 0;
+    padding: 0;
+    font-family: 'AR One Sans', sans-serif;
+}
+
+/* Style the header and navigation bar */
+header {
+    background-color: #ffffff;
+    color: #121111;
+    padding: 10px 0;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px; */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    color: white;
+}
+
+.nav-links li {
+    margin-right: 20px;
+    /* border: 2px solid black; */
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #0099cc;
+    color: white;
+
+}
+
+.nav-links li:hover{
+    box-shadow: #0077aa 0px 1px 4px, #0077aa 0px 0px 0px 3px;
+    transition:  0.3s;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #0d0d0d;
+    transition: color 0.3s ease;
+    color: white;
+}
+
+ .intro {
+    margin-top: 20px;
+    text-align: center;
+    
+}
+
+.intro h1{
+    font-size: 50px;
+    font-weight: bolder;
+    /* background-image: url("https://media.istockphoto.com/id/943365750/photo/fluid-art-abstract-colorful-background-wallpaper-texture-mixing-paints-modern-art-marble.webp?s=2048x2048&w=is&k=20&c=GXqpJBKR94XxXcsHK5yK3oNAIPjK2kGQI-MjCbfcVBY="); */
+    background-image: url("https://media.istockphoto.com/id/1152192813/photo/marble-green-orange-gold-black-neon-abstract-texture-wave-colorful-background-ebru-marbled.jpg?s=1024x1024&w=is&k=20&c=2cti7SbK2QJDWGTAri0ofTWL6DdHtnAg0QhFgW1DcGQ=");
+    background-size: cover;
+    background-position: center;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-family: 'Hind Siliguri', sans-serif;
+font-family: 'Poppins', sans-serif;
+}
+.intro p{
+    font-size: 30px;
+    font-weight: bolder;
+    /* background-image: url("https://media.istockphoto.com/id/943365750/photo/fluid-art-abstract-colorful-background-wallpaper-texture-mixing-paints-modern-art-marble.webp?s=2048x2048&w=is&k=20&c=GXqpJBKR94XxXcsHK5yK3oNAIPjK2kGQI-MjCbfcVBY="); */
+    background-image: url("https://media.istockphoto.com/id/1152192813/photo/marble-green-orange-gold-black-neon-abstract-texture-wave-colorful-background-ebru-marbled.jpg?s=1024x1024&w=is&k=20&c=2cti7SbK2QJDWGTAri0ofTWL6DdHtnAg0QhFgW1DcGQ=");
+    background-size: cover;
+    background-position: center;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-family: 'Hind Siliguri', sans-serif;
+font-family: 'Poppins', sans-serif;
+}
+
+
+
+/*
+.intro img{
+    width: 100%;
+    height: 400px;
+} */
+
+
+
+
+/* Style the main section */
+.main-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px;
+}
+main{
+    width: 100%;
+}
+.main-section img{
+    width: 40%;
+}
+
+.main-content {
+    width: 50%;
+    /* flex: 1; */
+    padding-right: 20px;
+    /* background-color: wheat; */
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.main-content h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.key-features {
+    list-style-type: square;
+    margin-bottom: 20px;
+}
+
+.key-features li {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 30px;
+    /* background-color: #3498db; */
+    background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 5px;
+    
+}
+
+.cta-button:hover {
+    /* background-color: #2980b9; */
+    transition: background-image 0.3s ease;
+    transition: 0.3s;
+    background-image: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
+    
+}
+
+/* Style the main section image */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* Style the join section */
+.join-section {
+    /* background-color: #0099cc;  */
+    /* background-image: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%); */
+    background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
+    color: #fff; /* Set text color to white */
+    padding: 100px 0;
+    text-align: center;
+    width: 95%;
+    margin: auto;
+    border-radius: 10px;
+}
+
+/* Style the join container */
+.join-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Style the heading */
+.join-container h2 {
+    font-size: 36px;
+    margin: 0;
+}
+
+/* Style the paragraph */
+.join-container p {
+    font-size: 18px;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+/* Style the "Get Started" button */
+.join-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #fff; /* Set button background color */
+    color: #0099cc; /* Set button text color */
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+/* Button hover effect */
+.join-button:hover {
+    background-color: #0077aa; /* Change button background color on hover */
+    color: #fff; /* Change button text color on hover */
+    transform: scale(1.05); /* Add a slight scale effect on hover */
+}
+
+
+/* Style the footer */
+ footer {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 20px;
+    text-align: center;
+    
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+
+.social-icons {
+    margin-bottom: 20px;
+    
+}
+
+.social-icons .icon {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 24px;
+}
+
+.social-icons .icon img {
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+}
+
+
+footer p {
+    font-size: 14px;
+    margin: 0;
+}
+
+
+.social-icons .icon:hover {
+    transition: 0.3s;
+    transform: scale(1.2);
+} 
+
+
+
