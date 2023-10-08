@@ -3,43 +3,29 @@ form.addEventListener('submit',(e)=>{
     e.preventDefault();
     let email = form.email.value;
     let password = form.password.value;
-    let url = 'http://localhost:8080/signin';
+    let url = 'http://localhost:8080/signIn';
+    const log = btoa(email+':'+password);
+
     const userData = {
         username: email,
-        password: password,
-        role: "USER"
+        password: password
     };
-
+    console.log(log);
     // Define the fetch options for the POST request
-  const requestOptions = {
+  fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json', // Set the content type to JSON
+      'Authorization': 'Basic '+log
     },
-    body: JSON.stringify(userData), // Convert the user data to JSON format
-  };
-
-  signup(requestOptions, url);
-
-
+  }
+  ).then(Response=> {
+    if(Response.status == 401){
+      throw new Error("Login Failed");
+    }
+    let token = Response.headers.get('Authorization');
+    console.log(token);
+    localStorage.setItem('jwtToken', token);
+    // window.location.href = "../website/home.html";
+  }
+)
 });
-
-async function signup(requestOptions, signupUrl){
-    try {
-        // Perform the POST request using async/await
-        const response = await fetch(signupUrl, requestOptions);
-    
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-    
-        const data = await response.json(); // Parse the response JSON
-    
-        // Handle the successful response here
-        console.log('Signup successful:', data);
-      } catch (error) {
-        // Handle any errors that occurred during the fetch
-        console.error('Error:', error);
-      }
-}
-
