@@ -136,6 +136,8 @@ label {
 
 input[type="text"],
 input[type="email"],
+input[type="date"],
+select,
 button[type="submit"] {
     padding: 10px;
     margin-bottom: 10px;
@@ -195,7 +197,7 @@ button[type="submit"]:hover {
     border-collapse: collapse;
     font-size: 0.9em;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    border-radius: 400px;
+    /* border-radius: 400px; */
 }
 
 .table thead tr {
@@ -234,4 +236,22 @@ table button{
     /* border-radius: 100px; */
     margin-left: 5px;
     border: none;
+}
+
+#alert{
+    text-align: center;
+    color: red;
+
+}
+
+.page{
+    color: black;
+}
+.page:hover{
+    text-decoration: underline;
+    border: 3px solid rgb(80, 99, 204);
+    padding: 6px;
+    transition: 0.1s ease;
+    border-radius: 8px;
+    
 }

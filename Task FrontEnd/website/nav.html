@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TaskPulse</title>
     <style>
         /* Style the header and navigation bar */
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700;800&family=Poppins:wght@800&display=swap');
@@ -14,7 +14,7 @@
 body, ul{
             margin: 0;
             padding: 0;
-            font-family: 'AR One Sans', sans-serif;
+            /* font-family: 'AR One Sans', sans-serif; */
         }
 header {
     background-color: #ffffff;
@@ -66,6 +66,109 @@ header {
     color: white;
 }
 
+
+
+/* Styling for the search bar */
+/* .search-bar {
+    position: relative;
+}
+
+.search-input {
+    width: 0; 
+    height: 36px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+    color: #333;
+    transition: width 0.3s ease-in-out;
+    padding: 0 10px;
+}
+
+.search-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    height: 36px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+
+.search-bar:hover .search-input {
+    width: 150px; 
+}
+
+
+.search-input:focus {
+    width: 150px; 
+    outline: none;
+} */
+
+
+/* Styling for the search icon/button */
+.search-icon {
+    position: relative;
+}
+
+#search-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 36px;
+}
+
+/* Styling for the search bar container */
+.search-bar-container {
+    display: none;
+    position: fixed;
+    top: -100px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: top 0.5s ease-in-out;
+}
+
+/* Styling for the search bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 150px;
+    height: 36px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+    color: #333;
+    padding: 0 10px;
+}
+
+.search-close-button {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 36px;
+    margin-left: 10px;
+}
+
+/* Animation for the search bar container */
+.show-search-bar .search-bar-container {
+    top: 0;
+}
+
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -76,12 +179,36 @@ header {
         <ul class="nav-links">
             <li><a href="home.html">Home</a></li>
             <li><a href="project.html">Projects</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Portfolio</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="Task.html">Tasks</a></li>
+            <li><a href="people.html">Peoples</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <!-- New li element for the search bar -->
+        <!-- <tag class="search-bar" style="background-color: white;">
+            <input type="text" class="search-input" placeholder="Search">
+            <button class="search-button">Search</button>
+        </tag> -->
+        <!-- <li class="search-icon"><button id="search-button">Search</button></li> -->
+
         </ul>
     </nav>
+
+
+
 </header>
     
 </body>
+
+<script>
+    const searchButton = document.getElementById('search-button');
+const closeButton = document.getElementById('close-button');
+const searchContainer = document.querySelector('.search-bar-container');
+      
+      searchButton.addEventListener('click', () => {
+          searchContainer.classList.add('show-search-bar');
+      });
+      
+      closeButton.addEventListener('click', () => {
+          searchContainer.classList.remove('show-search-bar');
+      });
+</script>
 </html>

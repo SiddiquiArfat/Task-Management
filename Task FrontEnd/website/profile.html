@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #body{
+            /* background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%); */
+            width: 60%;
+            margin: auto;
+            /* border: 1px solid black; */
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #body img{
+            width: 150px;
+            border-radius: 100%;
+        }
+        #intro{
+            width: 13%;
+            /* border: 1px solid black; */
+        }
+        p{
+            font-size: 20px;
+        }
+        #about button{
+            background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
+            color: #fff;
+            border: none;
+            padding: 7px;
+            /* margin-left: 10px; */
+            margin-right: 10px;
+            border-radius: 7px;
+            margin-bottom: 30px;
+        }
+        #about{
+            /* border: 2px solid black; */
+            /* margin-left: 50px; */
+            width: 50%;
+        }
+        #about a{
+            text-decoration: none;
+            margin-right: 10px;
+            font-size: 25px;
+            /* padding: 30px; */
+            color: black;
+        }
+        .abbout{
+            /* width: 150%; */
+            width: 60%;
+            border: 2px solid rgb(192, 190, 190);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* Styles for the popup */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    /* max-width: 400px; */
+    /* width: 600px; */
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+textarea,
+button[type="submit"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0f8cdf;
+}
+
+/* Styles for the animation */
+.popup.show-popup {
+    display: flex;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+/* Styles for the close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.close:hover {
+    transform: rotate(90deg); /* Add the desired rotation angle */
+}
+
+.deletepopup{
+    width: 20%;
+}
+    </style>
+</head>
+<body>
+    
+    <div id="navbar-placeholder"></div>
+    <div id="body">
+        <div id="intro"></div>
+        <div id="about"></div>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopupBtn">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="updateform">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="about">Bio:</label>
+                <!-- <input type="text" id="about" name="about" required> -->
+                <textarea name="about" id="about" cols="30" rows="10"></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div id="footer-placeholder"></div>
+    
+</body>
+<script src="profile.js"></script>
+</html>

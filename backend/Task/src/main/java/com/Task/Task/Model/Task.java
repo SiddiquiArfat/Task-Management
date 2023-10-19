@@ -28,14 +28,20 @@ public class Task {
 
     LocalDate ldt = LocalDate.now();
 
+    String about;
+
     LocalDate closed;
 
-    @JsonIgnore
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime timestamp;
+
+//    @JsonIgnore
+//    @JsonProperty("user-name")
     @ManyToOne
     TaskUser user;
 
     @JsonIgnore
+//    @JsonProperty("project-name")
     @ManyToOne
     Project project;
-
 }

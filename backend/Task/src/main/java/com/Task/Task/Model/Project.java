@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -23,21 +24,24 @@ public class Project {
     Integer id;
 
     @Column(unique = true)
-    @Size(min = 4, max = 9, message = "Project name should be between 4 and 9 Character")
+    @Size(min = 4, max = 17, message = "Project name should be between 4 and 9 Character")
     String projectName;
+
+//    @JsonIgnore
 
     @ManyToOne
     TaskUser admin;
 
+    String about;
 
+//    @JsonIgnore
     @ManyToMany
     List<TaskUser> user = new ArrayList<>();
 
-
+//    @JsonIgnore
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     List<Task> tasks = new ArrayList<>();
-
 
     LocalDate ldt = LocalDate.now();
 
