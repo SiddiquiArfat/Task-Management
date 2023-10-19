@@ -8,13 +8,15 @@ import com.Task.Task.Respository.UserRepository;
 import com.Task.Task.exception.ProjectException;
 import com.Task.Task.exception.TaskException;
 import com.Task.Task.exception.UserException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 @Service
@@ -39,25 +41,29 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public Project addProject(Integer uid, Project project) {
+    public Project addProject(String username, Project project) {
 
-        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not Found"));
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not Found"));
         project.setAdmin(user);
         List<TaskUser> users = project.getUser();
         users.add(user);
         List<Project> projects = user.getProject();
+
+        Optional<Project> project1 = projects.stream().filter(h -> h.getProjectName().equalsIgnoreCase(project.getProjectName())).findAny();
+        if (project1.isPresent()) throw new ProjectException("Porject Already Exist with this name");
         projects.add(project);
         ur.save(user);
         return pr.save(project);
     }
 
     @Override
-    public Task addTask(Integer uid, Integer pid, Task task) {
-        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not Found"));
-        Project project = pr.findById(pid).orElseThrow(()->new ProjectException("Project Not Found"));
+    public Task addTask(String username, String pname, Task task) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not Found"));
+        Project project = pr.findByProjectName(pname).orElseThrow(()->new ProjectException("Project Not Found"));
         List<Task> tasks = project.getTasks();
         tasks.add(task);
         task.setProject(project);
+        task.setUser(user);
         return tr.save(task);
     }
 
@@ -75,16 +81,16 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public List<Task> getAllTasks(Integer uid) {
-        TaskUser user = ur.findById(uid).orElseThrow(()->new UserException("User not Found"));
+    public List<Task> getAllTasks(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User not Found"));
         List<Task> tasks = user.getAssignedTasks();
         if(tasks.isEmpty()) throw new TaskException("No Current Tasks");
         return tasks;
     }
 
     @Override
-    public List<Task> openedTask(Integer uid) {
-        TaskUser user = ur.findById(uid).orElseThrow(()->new UserException("User not Found"));
+    public List<Task> openedTask(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User not Found"));
         List<Task> tasks = user.getAssignedTasks();
         if(tasks.isEmpty()) throw new TaskException("No Current Tasks");
         List<Task> tasks1 = tasks.stream().filter(h -> h.getStatus().equals("OPEN")).toList();
@@ -93,11 +99,11 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public List<Task> closedTask(Integer uid) {
-        TaskUser user = ur.findById(uid).orElseThrow(()->new UserException("User not Found"));
+    public List<Task> closedTask(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User not Found"));
         List<Task> tasks = user.getAssignedTasks();
         if(tasks.isEmpty()) throw new TaskException("No Current Tasks");
-        List<Task> tasks1 = tasks.stream().filter(h -> h.getStatus().equals("CLOSED")).toList();
+        List<Task> tasks1 = tasks.stream().filter(h -> h.getStatus().equals("CLOSE")).toList();
         if(tasks1.isEmpty()) throw new TaskException("No Open Current Tasks");
         return tasks1;
     }
@@ -122,8 +128,8 @@ public class UserServiceImpl  implements UserService{
 
 
     @Override
-    public List<Project> getAllProjects(Integer uid) {
-        TaskUser user = ur.findById(uid).orElseThrow(()->new UserException("User not Found"));
+    public List<Project> getAllProjects(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User not Found"));
         List<Project> projects = user.getProject();
         if(projects.isEmpty()) throw new ProjectException("No Projects Found");
         return projects;
@@ -146,18 +152,228 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public List<Project> getALlProject(Integer uid) {
-        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not found"));
+    public List<Project> getALlProject(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not found"));
         List<Project> projects = user.getProject();
         if(projects.isEmpty()) throw new ProjectException("Don't Have any project history");
         return projects;
     }
 
-//    public TaskUser follow(Integer uid, AssignTaskDTO dto){
-//
-//        TaskUser user = ur.findByUsername(dto.getUsername()).orElseThrow(()-> new UserException("User Not Found"));
-//
-//
-//    }
+    @Override
+    public Project getProjectByProject(String username, Integer pid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not found"));
+        List<Project> projects = user.getProject();
+        if(projects.isEmpty()) throw new ProjectException("Don't Have any project history");
+        return projects.stream().filter(h -> Objects.equals(h.getId(), pid)).findAny().orElseThrow(()-> new ProjectException("Project Not found"));
+    }
+
+    @Override
+    public List<Project> getAllcompletedProject(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not found"));
+        List<Project> projects = user.getProject();
+        if(projects.isEmpty()) throw new ProjectException("Don't Have any project history");
+        return projects.stream().filter(h-> h.isCompleted()).toList();
+    }
+
+    @Override
+    public List<Project> getAllNotCompletedProject(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not found"));
+        List<Project> projects = user.getProject();
+        if(projects.isEmpty()) throw new ProjectException("Don't Have any project history");
+        return projects.stream().filter(h-> !h.isCompleted()).toList();
+    }
+
+    @Override
+    public List<Project> getALlDueProjects(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not found"));
+        List<Project> projects = user.getProject();
+        if(projects.isEmpty()) throw new ProjectException("Don't Have any project history");
+        return projects.stream().filter(h-> !h.isCompleted()).filter(h-> h.getCompletedDate()!=null).filter(h->  h.getCompletedDate().isBefore(LocalDate.now())).toList();
+    }
+
+    @Override
+    public Project updateProject(ProjectDTO projectD,Integer pid) {
+
+        Project project = pr.findById(pid).orElseThrow(()-> new ProjectException("Project Not Found"));
+        String name = projectD.getName();
+        String about = projectD.getAbout();
+        LocalDate deadline = projectD.getDeadline();
+
+        project.setProjectName(name);
+        project.setAbout(about);
+
+        project.setCompletedDate(deadline);
+        return pr.save(project);
+    }
+
+    @Override
+    public String deleteProject(Integer pid) {
+
+        pr.deleteById(pid);
+        return "Project Deleted";
+    }
+
+    @Override
+    public Project markAsCompleted(String username, Integer pid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        List<Project> projects= user.getProject();
+        Project project = projects.stream().filter(h-> Objects.equals(h.getId(), pid)).findAny().orElseThrow(()-> new ProjectException("Project Not found"));
+        project.setCompleted(true);
+        return pr.save(project);
+    }
+
+    @Override
+    public Project markAsProgress(String username, Integer pid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        List<Project> projects= user.getProject();
+        Project project = projects.stream().filter(h-> Objects.equals(h.getId(), pid)).findAny().orElseThrow(()-> new ProjectException("Project Not found"));
+        project.setCompleted(false);
+        return pr.save(project);
+    }
+
+    @Override
+    public TaskUser addUserToProject(String username, AssignTaskDTO asd) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        List<Project> projects= user.getProject();
+
+        Integer pid = asd.getProjectId();
+        Project project = projects.stream().filter(h-> Objects.equals(h.getId(), pid)).findAny().orElseThrow(()-> new ProjectException("Project Not found"));
+
+        List<TaskUser> users = project.getUser();
+
+        Optional<TaskUser> validation = users.stream().filter(h-> h.getUsername().equals(asd.getUsername())).findAny();
+
+        if(validation.isPresent()) throw new UserException("User Already Exists");
+
+        TaskUser finduser = ur.findByUsername(asd.getUsername()).orElseThrow(()->new UserException("User Not Found"));
+        users.add(finduser);
+        project.setUser(users);
+        List<Project> projects1 = finduser.getProject();
+        projects1.add(project);
+        finduser.setProject(projects1);
+        pr.save(project);
+        return ur.save(finduser);
+    }
+
+    @Override
+    public Project getUserProject(String username, Integer tid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        Task task = user.getAssignedTasks().stream().filter(h-> Objects.equals(h.getId(), tid)).findAny().orElseThrow(()-> new TaskException("Task Not Found"));
+
+        Project project = task.getProject();
+
+        return project;
+    }
+
+    @Override
+    public Task getTaskById(String username, Integer tid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        Task task = user.getAssignedTasks().stream().filter(h-> Objects.equals(h.getId(), tid)).findAny().orElseThrow(()-> new TaskException("Task Not Found"));
+        return task;
+    }
+
+    @Override
+    public Task updateTask(String username, Integer tid, ProjectDTO projectDTO) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        Task task = user.getAssignedTasks().stream().filter(h-> Objects.equals(h.getId(), tid)).findAny().orElseThrow(()-> new TaskException("Task Not Found"));
+        task.setTaskName(projectDTO.getName());
+        task.setAbout(projectDTO.getAbout());
+        task.setClosed(projectDTO.getDeadline());
+        return tr.save(task);
+    }
+
+    @Override
+    public String deleteTaskByid(String username, Integer tid) {
+        tr.deleteById(tid);
+        return "Task Deleted";
+    }
+
+    @Override
+    public Task openTask(String username, Integer tid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        Task task = user.getAssignedTasks().stream().filter(h-> Objects.equals(h.getId(), tid)).findAny().orElseThrow(()-> new TaskException("Task Not Found"));
+        task.setStatus("OPEN");
+        task.setTimestamp(null);
+        return tr.save(task);
+    }
+
+    @Override
+    public Task closesTask(String username, Integer tid) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        Task task = user.getAssignedTasks().stream().filter(h-> Objects.equals(h.getId(), tid)).findAny().orElseThrow(()-> new TaskException("Task Not Found"));
+        task.setStatus("CLOSE");
+        task.setTimestamp(LocalDateTime.now());
+        return tr.save(task);
+    }
+
+    @Override
+    public List<TaskUser> getFollowers(String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        return user.getFollowers();
+    }
+
+    @Override
+    public List<TaskUser> getFollowing(String username) {
+
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        return user.getFollowing();
+    }
+
+    @Override
+    public TaskUser updateUser(String username, UserDto userDto) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        user.setName(userDto.getName());
+        user.setBio(userDto.getBio());
+        return ur.save(user);
+    }
+
+    @Override
+    public List<TaskUser> people(String username) {
+        TaskUser cuser = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        List<TaskUser> users = ur.findAll();
+        List<TaskUser> st = users.stream().filter(h-> !h.getUsername().equals(username)).toList();
+
+
+
+        return st;
+    }
+
+    @Override
+    public TaskUser unfollow(String username, Integer uid) {
+        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not Found") );
+        TaskUser cuser = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        List<TaskUser> following = cuser.getFollowing();
+        following.remove(user);
+        cuser.setFollowing(following);
+
+        List<TaskUser> follower = user.getFollowers();
+        follower.remove(cuser);
+        user.setFollowers(follower);
+        ur.save(user);
+        return ur.save(cuser);
+    }
+
+    @Override
+    public TaskUser follow(String username, Integer uid) {
+        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not Found") );
+        TaskUser cuser = ur.findByUsername(username).orElseThrow(()->new UserException("User Not Found"));
+        List<TaskUser> following = cuser.getFollowing();
+        following.add(user);
+        cuser.setFollowing(following);
+        List<TaskUser> follower = user.getFollowers();
+        follower.add(cuser);
+        user.setFollowers(follower);
+        ur.save(user);
+        return ur.save(cuser);
+    }
+
+    @Override
+    public Boolean check(String username, Integer uid) {
+        TaskUser user = ur.findById(uid).orElseThrow(()-> new UserException("User Not Found") );
+        List<TaskUser> followers = user.getFollowers();
+        Optional<TaskUser> tuser = followers.stream().filter(h-> h.getUsername().equals(username)).findAny();
+        return tuser.isPresent();
+    }
+
 
 }

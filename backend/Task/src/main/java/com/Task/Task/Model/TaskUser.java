@@ -12,7 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -34,25 +36,35 @@ public class TaskUser {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
-//    @Size(min = 10, max = 12, message = "Invalid Mobile Number")
-//    String phone;
 
 
     @NotNull(message = "Please Select Role")
     @NotBlank(message = "Please Select Role")
     String role;
 
-    @JsonIgnore
-    @OneToMany
-    List<TaskUser> followers = new ArrayList<>();
+    @Lob
+    private byte[] profileImage;
+
+//    @JsonIgnore
+//    @OneToMany(fetch = FetchType.LAZY)
+//    List<TaskUser> followers = new ArrayList<>();
+//
+//    @JsonIgnore
+//    @OneToMany(fetch = FetchType.LAZY)
+//    List<TaskUser> following = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany
+    @ManyToMany(mappedBy = "followers")
     List<TaskUser> following = new ArrayList<>();
+
+    @ManyToMany
+    List<TaskUser> followers = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Task> assignedTasks = new ArrayList<>();
+
+    String bio;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)

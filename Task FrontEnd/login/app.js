@@ -25,7 +25,7 @@ form.addEventListener('submit',(e)=>{
     let token = Response.headers.get('Authorization');
     console.log(token);
     localStorage.setItem('jwtToken', token);
-    // window.location.href = "../website/home.html";
+    window.location.href = "../website/home.html";
   }
 )
 });

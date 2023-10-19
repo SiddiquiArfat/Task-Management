@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Tasks
+    </title>
+    <link rel="stylesheet" href="project.css">
+    
+</head>
+
+
+
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <div class="button"><button id="showPopupBtn" class="beautiful-button">Add Task</button></div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopupBtn">&times;</span>
+            <h2>New Task</h2>
+            <form>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Please Enter Task Name" required>
+
+                <label for="about">About:</label>
+                <input type="text" id="about" name="about" placeholder="Please Enter About" required>
+
+                <label for="Deadline">Under Project:</label>
+                <!-- <input type="text" id="text" name="text" placeholder="Please Enter ProjectName" required> -->
+                <select class="custom-select1" id="customSelect1" aria-placeholder="PLease select project" required></select>
+                <label for="Deadline">Deadline:</label>
+                <input type="date" id="date" name="date" required>
+
+                <!-- <label for=""></label> -->
+
+                <button type="submit">Submit</button>
+            </form>
+
+
+          
+
+
+        </div>
+    </div>
+
+
+    <div  class="select-container" style="margin-left: 50px;">
+        <select class="custom-select" id="customSelect">
+            <option value="none">Filters</option>
+            <option value="completed">Completed Task</option>
+            <option value="notcompleted">Not Completed Task</option>
+        </select>
+        <div class="select-style">
+            <div class="arrow-down"></div>
+        </div>
+    </div>
+
+    <div id="alert"></div>
+
+    <div id="listproject">
+        <table class="table">
+            <thead class="head">
+                <tr>
+                    <th>Task Name</th>
+                    <th>Created</th>
+                    <!-- <th>Deadline</th> -->
+                    <th>under-project</th>
+                    <th>Admin</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="body">
+            </tbody>
+        <table>
+    </div>
+
+
+    <div id="footer-placeholder"></div>
+
+</body>
+
+<script src="task.js"></script>
+</html>
