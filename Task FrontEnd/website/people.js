@@ -43,6 +43,27 @@ document.addEventListener('DOMContentLoaded', function () {
   xhr.send();
 });
 
+// const showPopupBtn = document.getElementById('showPopupBtn');
+const closePopupBtn = document.getElementById('closePopupBtn');
+const popup = document.getElementById('popup');
+
+// Show the popup when the button is clicked
+// showPopupBtn.addEventListener('click', () => {
+//     popup.classList.add('show-popup');
+// });
+
+// Close the popup when the close button is clicked
+closePopupBtn.addEventListener('click', () => {
+    popup.classList.remove('show-popup');
+});
+
+// Close the popup when clicking outside of it
+window.addEventListener('click', (e) => {
+    if (e.target === popup) {
+        popup.classList.remove('show-popup');
+    }
+});
+
 let main = document.getElementById('main');
 let jwtToken = localStorage.getItem('jwtToken');
 let username;
@@ -107,18 +128,6 @@ async function check(uid){
             'Content-Type': 'application/json',
           }
         });
-        // fetch(request)
-        //   .then(response => {
-        //     if (response.ok) {
-        //       return response.json();
-        //     }
-        //     else if (response.status == 401) {
-        //       window.location.href = "../login/login.html";
-        //     }
-        //   })
-        //   .then(data => {
-            
-        //   })
           
         try {
           const response = await fetch(request);
@@ -138,16 +147,16 @@ async function check(uid){
 async function fetchData(uid, btn) {
   try {
     const data = await check(uid);
-    console.log('Data:', data);
+    // console.log('Data:', data);
     if (data === true) {
       btn.style.backgroundColor = 'gray';
       btn.style.color = 'white';
-      btn.textContent = "Following";
+      btn.textContent = 'following';
     }
     else {
       btn.style.backgroundImage = "linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%)";
       btn.style.color = 'white';
-      btn.textContent = "Follow";
+      btn.textContent = 'follow';
     }
     
   } catch (error) {
@@ -174,22 +183,15 @@ async function body(data) {
     let name = document.createElement('p');
     name.textContent = element.name;
 
+    let uname = document.createElement('p');
+    uname.textContent = element.username;
+    uname.style.color = 'gray';
+
     let btn = document.createElement('button');
     let follower = element.followers;
     let div2 = document.createElement('div');
     div2.className = 'container';
-
     fetchData(element.id, btn);
-    // if (find === true) {
-    //   btn.style.backgroundColor = 'gray';
-    //   btn.textContent = "following";
-    // }
-    // else {
-    //   btn.style.backgroundImage = "linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%)";
-    //   btn.style.color = 'white';
-    //   btn.textContent = "follow";
-    // }
-
     btn.addEventListener('click', () => {
       if (btn.textContent == 'following') {
         const apiUrl = 'http://localhost:8080/unfollow/'+element.id;
@@ -210,7 +212,7 @@ async function body(data) {
             }
           })
           .then(data => {
-            console.log(data);
+            // console.log(data);
             fun();
           })
       }
@@ -235,7 +237,7 @@ async function body(data) {
             }
           })
           .then(data => {
-            console.log(data);
+            // console.log(data);
             fun();
           })
 
@@ -246,7 +248,16 @@ async function body(data) {
 
 
     div2.append(btn)
-    div.append(img, name, div2);
+    div.append(img, name,uname,div2);
+
+    let cont = document.getElementById('cont');
+    uname.addEventListener('click',()=>{
+      
+    localStorage.setItem('UserProfile', JSON.stringify(element));
+    location.href = "UserProfile.html"; 
+
+    })
+
     main.append(div);
   });
 }

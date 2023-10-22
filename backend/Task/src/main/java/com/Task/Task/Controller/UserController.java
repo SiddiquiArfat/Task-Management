@@ -212,6 +212,10 @@ public class UserController {
     public ResponseEntity<TaskUser> profile(Principal principal){
         return new ResponseEntity<>(us.searchByUsername(principal.getName()), HttpStatus.OK);
     }
+    @GetMapping("/profile/{username}")
+    public ResponseEntity<TaskUser> uprofile(@PathVariable("username") String username){
+        return new ResponseEntity<>(us.searchByUsername(username), HttpStatus.OK);
+    }
 
     @GetMapping("/followers")
     public ResponseEntity<List<TaskUser>> follwers(Principal principal){
@@ -220,6 +224,15 @@ public class UserController {
     @GetMapping("/following")
     public ResponseEntity<List<TaskUser>> following(Principal principal){
         return new ResponseEntity<>(us.getFollowing(principal.getName()), HttpStatus.OK);
+    }
+
+    @GetMapping("/followers/{username}")
+    public ResponseEntity<List<TaskUser>> userfollwers(@PathVariable String username){
+        return new ResponseEntity<>(us.getFollowers(username), HttpStatus.OK);
+    }
+    @GetMapping("/following/{username}")
+    public ResponseEntity<List<TaskUser>> userfollowing(@PathVariable String username){
+        return new ResponseEntity<>(us.getFollowing(username), HttpStatus.OK);
     }
 
     @PatchMapping("/updateuser")
