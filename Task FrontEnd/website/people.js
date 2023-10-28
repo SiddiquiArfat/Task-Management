@@ -174,11 +174,11 @@ async function body(data) {
     let div = document.createElement('div');
     let img = document.createElement('img');
     img.className = 'profile';
-    if (data.profileImage == null) {
+    if (element.profileImage == null) {
       img.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     }
     else {
-      // img.src = 
+        img.src = `data:image/jpeg;base64,${element.profileImage}`;
     }
     let name = document.createElement('p');
     name.textContent = element.name;

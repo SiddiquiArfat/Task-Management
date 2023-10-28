@@ -43,20 +43,17 @@ public class TaskUser {
     String role;
 
     @Lob
+    @Column(length = 3145728) // 3 * 1024 * 1024 bytes for 3 MB
     private byte[] profileImage;
 
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY)
-//    List<TaskUser> followers = new ArrayList<>();
-//
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY)
-//    List<TaskUser> following = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(mappedBy = "followers")
     List<TaskUser> following = new ArrayList<>();
 
+
+
+    @JsonIgnore
     @ManyToMany
     List<TaskUser> followers = new ArrayList<>();
 

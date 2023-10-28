@@ -146,11 +146,11 @@ public class UserController {
 //    image upload
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+    public ResponseEntity<Void> handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
         TaskUser user = ur.findByUsername(principal.getName()).orElseThrow(()-> new UserException("User Not Found"));
         user.setProfileImage(file.getBytes());
         ur.save(user);
-        return "redirect:/profile";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/profile-image")

@@ -28,7 +28,6 @@ public class Project {
     String projectName;
 
 //    @JsonIgnore
-
     @ManyToOne
     TaskUser admin;
 

@@ -75,6 +75,7 @@ function fun(){
 
 
 
+
 function body(data){
 
   let bod = document.getElementById('body');
@@ -85,15 +86,16 @@ intro.innerHTML = "";
 about.innerHTML = "";
     
    
-    let image = "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg";
+let image = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     
-    let img = document.createElement('img');
-    if(data.profileImage == null){
-        img.src = image;
-    }
-    else{
-        img.src = data.profileImage;
-    }
+let img = document.createElement('img');
+if(data.profileImage == null){
+    img.src = image;
+    
+}
+else{
+    img.src = `data:image/jpeg;base64,${data.profileImage}`;
+}
 
     let name = document.createElement('p');
     name.textContent = data.username;
@@ -111,25 +113,22 @@ about.innerHTML = "";
     intro.append(img,name1);
 
     let br = document.createElement('br');
-    let followers = document.createElement('span')
-    let followings = document.createElement('span') 
+    // let followers = document.createElement('span')
+    // let followings = document.createElement('span') 
+    
     let a1 = document.createElement('a');
     let a2 = document.createElement('a');
 
+   
+    
 
     follower(a1,data.username);
     following(a2,data.username);
-    // update it later
-    // if(fol!=null) a1.textContent = fol.length+' followers';
-    // else a1.textContent = '0 followers';
-    // if(foling!=null) a2.textContent = fol.length+' following';
-    // else a2.textContent = '0 following';
+    a1.href = `followers.html?userId=${data.username}`;
+    a2.href = `following.html?userId=${data.username}`;
 
-    a1.href = "#";
-    a2.href = "#";
-    
-    followers.append(a1);
-    followings.append(a2);
+    // followers.append(a1);
+    // followings.append(a2);
 
 
 
@@ -186,7 +185,9 @@ about.innerHTML = "";
       }
     });
 
-    about.append(followers, followings,br, name,  ab,btn);
+    
+
+    about.append(a1, a2, br, name, ab, btn);
     bod.append(intro, about);
 }
 
@@ -265,7 +266,9 @@ function follower(a1,username){
       })
       .then(data => {
         console.log(data);
+        
         a1.textContent = data.length+" followers";
+        
         return data;
       })
 
@@ -294,6 +297,7 @@ function following(a2,username){
       .then(data => {
         console.log(data);
         a2.textContent = data.length+" following";
+        
         return data;
       })
 
