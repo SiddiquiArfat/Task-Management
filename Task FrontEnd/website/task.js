@@ -121,10 +121,10 @@ function getDetail(tid) {
       // console.log(data);
       // u = data;
       a1.textContent = data.projectName;
-      a1.addEventListener('click', () => {
-        localStorage.setItem('project', JSON.stringify(element));
-      })
-      a1.href = "/website/ProjectPage.html";
+      // a1.addEventListener('click', () => {
+      //   localStorage.setItem('project', JSON.stringify(element));
+      // })
+      a1.href = `ProjectPage.html?userId=${data.id}`;
       return data;
     })
   return a1;
@@ -141,7 +141,8 @@ function fun(data) {
     alert.innerHTML = "";
     let h111 = document.createElement('p');
     h111.textContent = "Task Not Found!!!";
-    alert.append(h111); 
+    alert.append(h111);
+    swal("Tasks Not Found", `No Task Found`, "error"); 
   }
   else{
     alert.innerHTML = "";
@@ -157,10 +158,7 @@ function fun(data) {
     let a = document.createElement('a');
     a.textContent = element.taskName;
     a.className = "page";
-    a.addEventListener('click', () => {
-      localStorage.setItem('task', JSON.stringify(element));
-    })
-    a.href = "/website/TaskPage.html";
+    a.href = `TaskPage.html?userId=${element.id}`;
     td.append(a);
     let td1 = document.createElement('td');
     td1.textContent = element.ldt;
@@ -186,17 +184,44 @@ function fun(data) {
   });
 }
 
-
+let select = document.getElementById('customSelect1');
+function fetchapii(){
+  const apiUrl = 'http://localhost:8080/projects';
+  const request = new Request(apiUrl, {
+    method: 'GET', 
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`, 
+      'Content-Type': 'application/json',
+    }
+  })
+  fetch(request)
+    .then(response => {
+      if(response.status == 401){
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+      }
+      return response.json();
+    })
+    .then(data => {
+      data.forEach((element, index) => {
+        let opt = document.createElement('option');
+        opt.textContent = element.projectName;
+        select.append(opt);
+      })
+      
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+  fetchapii();
 
 
 // add task
-let projectss = JSON.parse(localStorage.getItem('projects'));
-let select = document.getElementById('customSelect1');
-projectss.forEach((element, index) => {
-  let opt = document.createElement('option');
-  opt.textContent = element.projectName;
-  select.append(opt);
-})
+// let projectss = JSON.parse(localStorage.getItem('projects'));
+
+
 
 let form = document.querySelector('form');
 form.addEventListener('submit', () => {
@@ -229,8 +254,9 @@ form.addEventListener('submit', () => {
       // alert(response.status)
       window.location.href = "../login/login.html";
     }
-
-    location.reload(true);
+    popup.classList.add('show-popup');
+    swal("Good job!", `You have added task successfully`, "success");
+    fetchapi();
     return response.json();
   })
   console.log(project);
@@ -289,6 +315,7 @@ filter.addEventListener('change', () => {
         else if (response.status == 401) {
           window.location.href = "../login/login.html";
         }
+        
       })
       .then(data => {
         console.log(data);
@@ -300,6 +327,158 @@ filter.addEventListener('change', () => {
   else{
     fetchapi();
   }
-
-
 })
+
+// search
+let t;
+function search(data, tag) {
+  t = tag;
+  let query = data.value;
+  tag.innerHTML = "";
+  let h3 = document.createElement('h3');
+  h3.textContent = 'People';
+  let users = document.createElement('div');
+  if (query == '' || query == " ") {
+    tag.style.display = 'none';
+
+  } else {
+    tag.style.display = 'block';
+    const apiUrl = 'http://localhost:8080/searchuser/' + query;
+    const request = new Request(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    fetch(request)
+      .then(response => {
+        if (response.status == 401) {
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(element => {
+          console.log(element);
+
+          let innerdiv = document.createElement('div');
+          let a = document.createElement('a');
+          a.textContent = element.name;
+          a.href = `UserProfile.html?userId=${element.username}`;
+          let img = document.createElement('img');
+          img.className = 'profile';
+          if (element.profileImage == null) {
+            img.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+          }
+          else {
+            img.src = `data:image/jpeg;base64,${element.profileImage}`;
+          }
+          innerdiv.append(img, a);
+          users.append(innerdiv);
+
+        });
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      projectsearch(tag, query)
+      tasksearch(tag, query)
+
+      tag.append(h3, users);
+
+      
+  }
+}
+
+function projectsearch(tag, query){
+
+  let h3p = document.createElement('h3');
+  h3p.textContent = 'Projects';
+  let project = document.createElement('div');
+
+  const apiUrl = 'http://localhost:8080/searchuserproject/' + query;
+    const request = new Request(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    fetch(request)
+      .then(response => {
+        if (response.status == 401) {
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(element => {
+          let innerdiv = document.createElement('div');
+          let a = document.createElement('a');
+          a.textContent = element.projectName;
+          a.href = `ProjectPage.html?userId=${element.id}`;
+          innerdiv.append(a);
+          project.append(innerdiv);
+        });
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      tag.append(h3p, project)
+
+}
+
+function tasksearch(tag, query){
+  let h3p = document.createElement('h3');
+  h3p.textContent = 'Tasks';
+  let project = document.createElement('div');
+  const apiUrl = 'http://localhost:8080/searchusertask/' + query;
+    const request = new Request(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    fetch(request)
+      .then(response => {
+        if (response.status == 401) {
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(element => {
+          let innerdiv = document.createElement('div');
+          let a = document.createElement('a');
+          a.textContent = element.taskName;
+          a.href = `TaskPage.html?userId=${element.id}`;
+          innerdiv.append(a);
+          project.append(innerdiv);
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+      tag.append(h3p, project)
+}
+
+document.body.addEventListener('click', function (event) {
+  const target = event.target;
+  // Check if the click target is outside the scrollable div
+
+  if (target !== t && !t.contains(target)) {
+    t.style.display = 'none';
+  }
+});

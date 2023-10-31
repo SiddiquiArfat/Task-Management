@@ -55,10 +55,16 @@ public class UserController {
         return new ResponseEntity<>(us.addUser(user), HttpStatus.OK);
     }
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<TaskUser> signin(@RequestBody @Valid LoginDto dto) {
-//        return new ResponseEntity<>(us.login(dto), HttpStatus.OK);
-//    }
+    @GetMapping("/verify-account/{email}/{otp}")
+    public ResponseEntity<TaskUser> verifyAccount(@PathVariable("email") String email, @PathVariable("otp") String otp) {
+        return new ResponseEntity<>(us.verifyAccount(email, otp), HttpStatus.OK);
+    }
+
+    @GetMapping("/reotp/{email}")
+    public ResponseEntity<TaskUser> reotp(@PathVariable("email") String email) {
+        return new ResponseEntity<>(us.regenerateOtp(email), HttpStatus.OK);
+    }
+
 
     @PostMapping("/AddProject")
     public ResponseEntity<Project> AddProject(@RequestBody @Valid Project project, Principal principal) {
@@ -271,5 +277,22 @@ public class UserController {
     @GetMapping("/check/{uid}")
     public ResponseEntity<Boolean> check(Principal principal, @PathVariable("uid") Integer uid){
         return new ResponseEntity<>(us.check(principal.getName(), uid), HttpStatus.OK);
+    }
+    @GetMapping("/searchuser/{name}")
+    public ResponseEntity<List<TaskUser>> getUserSearch(@PathVariable("name") String name){
+        return new ResponseEntity<>(us.getSearchName(name), HttpStatus.OK);
+    }
+    @GetMapping("/searchuserproject/{email}")
+    public ResponseEntity<List<Project>> getUserSearchEmail(@PathVariable("email") String name, Principal principal){
+        return new ResponseEntity<>(us.getSearchProject(name, principal.getName()), HttpStatus.OK);
+    }
+    @GetMapping("/searchusertask/{email}")
+    public ResponseEntity<List<Task>> getUserSearchTask(@PathVariable("email") String name, Principal principal){
+        return new ResponseEntity<>(us.getSearchTask(name, principal.getName()), HttpStatus.OK);
+    }
+
+    @PostMapping("/contact")
+    public ResponseEntity<ContactPage> contact(@RequestBody ContactPage contactPage){
+        return new ResponseEntity<>(us.sendContact(contactPage), HttpStatus.OK);
     }
 }

@@ -7,15 +7,46 @@
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
-        google.charts.load("current", {packages:["corechart"]});
-    google.charts.setOnLoadCallback(drawChart);
 
-    function drawChart() {
+
+let jwttToken = localStorage.getItem('jwtToken');
+
+let tp = 0;
+let tpc = 0;
+function fetchapi(){
+  const apiUrl = 'http://localhost:8080/projects';
+  const request = new Request(apiUrl, {
+    method: 'GET', 
+    headers: {
+      'Authorization': `Bearer ${jwttToken}`, 
+      'Content-Type': 'application/json',
+    }
+  })
+  fetch(request)
+    .then(response => {
+      if(response.status == 401){
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+      }
+      return response.json();
+    })
+    .then(data => {
+      
+      tp = data.length;
+      for(let i=0;i<data.length;i++){
+        if(data[i].completed){
+          tpc++;
+        }
+      }
+      google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Year', 'Visitations', { role: 'style' } ],
-          ['2030', 16, 'opacity: 0.2'],
-          ['2040', 22, 'stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF'],
-          ['2050', 28, 'stroke-color: #871B47; stroke-opacity: 0.6; stroke-width: 8; fill-color: #BC5679; fill-opacity: 0.2']
+          ['Projects', 'Visitations', { role: 'style' } ],
+          ['Completed', tpc, 'opacity: 0.2'],
+          ['Not Completed', tp-tpc, 'stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF'],
+          ['Total', tp, 'stroke-color: #871B47; stroke-opacity: 0.6; stroke-width: 8; fill-color: #BC5679; fill-opacity: 0.2']
         ]);
 
       var view = new google.visualization.DataView(data);
@@ -36,6 +67,20 @@
       var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
       chart.draw(view, options);
   }
+
+      // console.log(tp, tpc);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+  fetchapi();
+
+
+
+        
+
+    
     </script>
 </head>
 <body>

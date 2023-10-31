@@ -38,7 +38,9 @@ public class SecurityConfig {
 
         .authorizeHttpRequests(auth ->{
         auth.requestMatchers(HttpMethod.POST, "/AddUser").permitAll()
-//        .requestMatchers(HttpMethod.POST, "/signIn").permitAll()
+        .requestMatchers("/verify-account/**").permitAll()
+                .requestMatchers("/reotp/**").permitAll()
+                .requestMatchers("/contact").permitAll()
         .requestMatchers("/swagger-ui*/**","/v3/api-docs/**").permitAll()
         .anyRequest().authenticated();
         }).csrf(csrf -> csrf.disable())

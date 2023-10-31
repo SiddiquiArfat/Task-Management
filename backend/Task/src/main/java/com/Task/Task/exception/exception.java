@@ -43,6 +43,15 @@ public class exception {
         ed.setMessage(exception.getMessage());
         return new ResponseEntity<>(ed, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ActiveException.class)
+    public ResponseEntity<ErrorDetails> activeException(ActiveException exception, WebRequest wr){
+        ErrorDetails ed = new ErrorDetails();
+        ed.setDescritpion(wr.getDescription(false));
+        ed.setMessage(exception.getMessage());
+        return new ResponseEntity<>(ed, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(TaskException.class)
     public ResponseEntity<ErrorDetails> taskException(TaskException exception, WebRequest wr){
         ErrorDetails ed = new ErrorDetails();

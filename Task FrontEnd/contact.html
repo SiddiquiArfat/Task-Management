@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .h {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        .contact-form {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input,
+        textarea {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2674a8;
+        }
+
+        .contact-info ul {
+            list-style: none;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">TaskPulse</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <!-- <li><a href="#">About</a></li> -->
+                <!-- <li><a href="#">Services</a></li> -->
+                <li><a href="https://siddiquiarfat.github.io/">Portfolio</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="h">
+        <h1>Contact Us</h1>
+        <p>Have questions or feedback? Reach out to us.</p>
+    </div>
+
+    <section class="contact-form">
+        <h2>Contact Form</h2>
+        <form id="contact">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+    <section class="contact-info">
+        <h2>Contact Information</h2>
+        <ul>
+            <li>Email: arfatsiddiqui070@gmail.com</li>
+            <li>Phone: +91 8669295926</li>
+            <li>Address: Maharashtra, India</li>
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-icons">
+            <a href="https://github.com/SiddiquiArfat" class="icon">
+                <img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" alt="Github">
+            </a>
+            <a href="#" class="icon">
+                <img src="https://img.icons8.com/?size=256&id=zXhRTdxWEKE5&format=png" alt="Twitter">
+            </a>
+            <a href="https://www.instagram.com/arfaat1815/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA=="
+                class="icon">
+                <img src="https://img.icons8.com/?size=256&id=32323&format=png" alt="Instagram">
+            </a>
+            <a href="https://www.linkedin.com/in/arfat-siddiqui-431218205/" class="icon">
+                <img src="https://img.icons8.com/?size=256&id=114445&format=png" alt="LinkedIn">
+            </a>
+        </div>
+        <p>&copy; 2023 TaskPulse</p>
+    </footer>
+</body>
+<script src="conta.js"></script>
+
+</html>

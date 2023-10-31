@@ -2,18 +2,21 @@ package com.Task.Task.Service;
 
 import com.Task.Task.Model.*;
 
+import com.Task.Task.Respository.ContactRepository;
 import com.Task.Task.Respository.ProjectRepository;
 import com.Task.Task.Respository.TaskRepository;
 import com.Task.Task.Respository.UserRepository;
 import com.Task.Task.exception.ProjectException;
 import com.Task.Task.exception.TaskException;
 import com.Task.Task.exception.UserException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.Task.Task.util.*;
+import io.swagger.v3.oas.models.info.Contact;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,14 +33,54 @@ public class UserServiceImpl  implements UserService{
     TaskRepository tr;
     @Autowired
     PasswordEncoder pe;
+    @Autowired
+    private OtpUtil otpUtil;
+    @Autowired
+    private EmailUtil emailUtil;
+
     @Override
     public TaskUser addUser(TaskUser user) {
+        String otp = otpUtil.generateOtp();
+        try {
+            emailUtil.sendOtpEmail(user.getUsername(), otp);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Unable to send otp please try again");
+        }
         Optional<TaskUser> opt = ur.findByUsername(user.getUsername());
         if(opt.isPresent()) throw new UserException("User Already Exist with this Email");
-
+        user.setOtp(otp);
+        user.setOtpGeneratedTime(LocalDateTime.now());
         user.setPassword(pe.encode(user.getPassword()));
-
         return ur.save(user);
+    }
+
+    @Override
+    public TaskUser verifyAccount(String email, String otp) {
+        TaskUser user  = ur.findByUsername(email)
+                .orElseThrow(() -> new RuntimeException("User not found with this email: " + email));
+        if (user.getOtp().equals(otp) && Duration.between(user.getOtpGeneratedTime(),
+                LocalDateTime.now()).getSeconds() < (1 * 60)) {
+            user.setActive(true);
+            return  ur.save(user);
+
+        }
+        throw new UserException("Please regenerate otp and try again");
+    }
+
+    @Override
+    public TaskUser regenerateOtp(String email) {
+        TaskUser user = ur.findByUsername(email)
+                .orElseThrow(() -> new RuntimeException("User not found with this email: " + email));
+        String otp = otpUtil.generateOtp();
+        try {
+            emailUtil.sendOtpEmail(email, otp);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Unable to send otp please try again");
+        }
+        user.setOtp(otp);
+        user.setOtpGeneratedTime(LocalDateTime.now());
+        return ur.save(user);
+
     }
 
     @Override
@@ -47,7 +90,7 @@ public class UserServiceImpl  implements UserService{
         project.setAdmin(user);
         List<TaskUser> users = project.getUser();
         users.add(user);
-        List<Project> projects = user.getProject();
+        List<Project> projects = pr.findAll();
 
         Optional<Project> project1 = projects.stream().filter(h -> h.getProjectName().equalsIgnoreCase(project.getProjectName())).findAny();
         if (project1.isPresent()) throw new ProjectException("Porject Already Exist with this name");
@@ -373,6 +416,47 @@ public class UserServiceImpl  implements UserService{
         List<TaskUser> followers = user.getFollowers();
         Optional<TaskUser> tuser = followers.stream().filter(h-> h.getUsername().equals(username)).findAny();
         return tuser.isPresent();
+    }
+
+    @Override
+    public List<TaskUser> getSearchName(String name) {
+        List<TaskUser> users = ur.findByNameContaining(name);
+        return users;
+    }
+
+    @Override
+    public List<Project> getSearchProject(String name, String username) {
+        TaskUser user = ur.findByUsername(username).orElseThrow(()-> new UserException("User Not Found") );
+        List<Project> project = pr.findByProjectNameContaining(name);
+        List<Project> project1 = new ArrayList<>();
+        for(Project p: project){
+            List<TaskUser> users = p.getUser();
+            boolean j = users.stream().anyMatch(h-> h.getUsername().equals(username));
+            if (j){
+                project1.add(p);
+            }
+        }
+        return project1;
+    }
+
+    @Override
+    public List<Task> getSearchTask(String name, String username) {
+        List<Task> task = tr.findByTaskNameContaining(name);
+        List<Task> task1 = new ArrayList<>();
+        for (Task t: task){
+            if (t.getUser().getUsername().equals(username)){
+                task1.add(t);
+            }
+        }
+        return task1;
+    }
+
+//    contact
+    @Autowired
+    ContactRepository cr;
+    @Override
+    public ContactPage sendContact(ContactPage contact) {
+        return cr.save(contact);
     }
 
 

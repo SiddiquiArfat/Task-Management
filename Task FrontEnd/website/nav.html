@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskPulse</title>
+    
     <style>
         /* Style the header and navigation bar */
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700;800&family=Poppins:wght@800&display=swap');
@@ -21,6 +22,7 @@ header {
     color: #121111;
     padding: 10px 0;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    position: relative;
 }
 
 .navbar {
@@ -120,52 +122,57 @@ header {
     height: 36px;
 }
 
-/* Styling for the search bar container */
-/* .search-bar-container {
+.search-result{
+    position: absolute;
+    background-color: white;
+    width: 40%;
+    border: 1px solid black;
+    left: 50%;
+    top: 110%;
     display: none;
-    position: fixed;
-    top: -100px;
-    left: 0;
-    right: 0;
-    background: #fff;
-    padding: 10px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    transition: top 0.5s ease-in-out;
-} */
-
-/* Styling for the search bar */
-/* .search-bar {
+    height: 200px;
+    overflow: auto; /* Add a scroll bar when content overflows the height */
+    border: 1px solid #ccc; /* Optional: Add a border for styling */
+    padding: 10px; 
+    border-radius: 10px;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
+    box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+    
+}
+.search-result a{
+    margin-left: 20px;
+}
+.search-result img{
+    width: 30px;
+    border-radius: 100%;
+}
+.search-result>div>div{
     display: flex;
     align-items: center;
+    padding: 10px;
 }
 
-.search-input {
-    width: 150px;
-    height: 36px;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    background: transparent;
-    color: #333;
-    padding: 0 10px;
+/* Style for WebKit (Safari, Chrome) */
+::-webkit-scrollbar {
+  width: 7px;
+  border-radius: 100%;
 }
 
-.search-close-button {
-    background: #e74c3c;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    height: 36px;
-    margin-left: 10px;
-} */
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the scrollbar track */
+}
 
-/* Animation for the search bar container */
-/* .show-search-bar .search-bar-container {
-    top: 0;
-} */
+/* Handle (thumb) */
+::-webkit-scrollbar-thumb {
+  background: #48D1CC; /* Color of the scrollbar thumb */
+  border-radius: 30px;
+}
 
-
-
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #0093AF; /* Color of the scrollbar thumb on hover */
+}
 
 
 
@@ -184,25 +191,24 @@ header {
             <li><a href="profile.html">Profile</a></li>
             <!-- New li element for the search bar -->
         <tag class="search-bar" style="background-color: white;">
-            <input class="search-input"  placeholder="Search">
+            <input onkeyup="search(this, result)" class="search-input"  placeholder="Search" id="input-val">
             <button class="search-button">Search</button>
         </tag>
-        <!-- <li class="search-icon"><button id="search-button">Search</button></li> -->
-
         </ul>
     </nav>
-
-
-
+    <div class="search-result" id="result">
+            <h3>hello world</h3>
+    </div>
 </header>
+
+
     
 </body>
 
 <script>
     const searchButton = document.getElementById('search-button');
 const closeButton = document.getElementById('close-button');
-const searchContainer = document.querySelector('.search-bar-container');
-      
+const searchContainer = document.querySelector('.search-bar-container');     
       searchButton.addEventListener('click', () => {
           searchContainer.classList.add('show-search-bar');
       });

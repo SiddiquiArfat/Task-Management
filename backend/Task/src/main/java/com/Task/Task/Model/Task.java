@@ -21,7 +21,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Size(min = 4, max = 14, message = "Name contain character between 4 and 14")
+    @Size(min = 3, max = 35, message = "Name contain character between 4 and 14")
     String taskName;
 
     String status = "OPEN";
