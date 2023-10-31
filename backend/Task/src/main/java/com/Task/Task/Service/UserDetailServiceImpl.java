@@ -2,8 +2,10 @@ package com.Task.Task.Service;
 
 import com.Task.Task.Model.TaskUser;
 import com.Task.Task.Respository.UserRepository;
+import com.Task.Task.exception.ActiveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +26,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         TaskUser user = ur.findByUsername(username).orElseThrow(()-> new BadCredentialsException("Username not found"));
+
+        if (!user.isActive()) {
+            try {
+                throw new ActiveException("Account is not active");
+            } catch (ActiveException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole()));

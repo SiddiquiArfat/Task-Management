@@ -1,14 +1,18 @@
 package com.Task.Task.Service;
 
 import com.Task.Task.Model.*;
+import io.swagger.v3.oas.models.info.Contact;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 
 public interface UserService {
     public TaskUser addUser(TaskUser user);
+
+    TaskUser verifyAccount(String email, String otp);
+
+    TaskUser regenerateOtp(String email);
+
     public Project addProject(String username, Project project);
     public Task addTask(String username, String pname, Task task);
 
@@ -72,4 +76,9 @@ public interface UserService {
 
     public Boolean check(String username, Integer uid);
 
+    public List<TaskUser> getSearchName(String name);
+    public List<Project> getSearchProject(String name, String username);
+    public List<Task> getSearchTask(String name, String username);
+
+    public ContactPage sendContact(ContactPage contact);
 }

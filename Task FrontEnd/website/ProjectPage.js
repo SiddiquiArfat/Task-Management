@@ -89,12 +89,14 @@ window.addEventListener('click', (e) => {
 
 
 
-let ele = JSON.parse(localStorage.getItem('project')) || [];
+
 // console.log(element);
 let jwtToken = localStorage.getItem('jwtToken');
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('userId');
 
 function func(){
-let url = "http://localhost:8080/getproject/"+ ele.id;
+let url = "http://localhost:8080/getproject/"+ userId;
 
 fetch(url,{
   method: "GET",
@@ -111,6 +113,7 @@ fetch(url,{
 })
 .then(data => {
   // console.log(data);
+  localStorage.setItem('project', JSON.stringify(data));
   fun(data);
 })
 .catch(error => {
@@ -123,6 +126,7 @@ let mainsection = document.getElementById('projectMain');
 
 
 function fun(element){
+  console.log(element)
   mainsection.innerHTML = "";
   // let element = JSON.parse(localStorage.getItem('project')) || [];
   let div1 = document.createElement('div');
@@ -173,7 +177,6 @@ function fun(element){
   addTask.className = 'beautiful-button';
   addTask.style.height = '40px';
   addTask.addEventListener('click', () => {
-    console.log('click one');
     popuptask.classList.add('show-popup');
   });
   interdiv.append(taskh1,addTask);
@@ -198,7 +201,7 @@ function fun(element){
     a.addEventListener('click',()=>{
       localStorage.setItem('task', JSON.stringify(ele));
     })
-    a.href = "/website/TaskPage.html";
+    a.href = "TaskPage.html?userId="+ele.id;
     h33.append(a);
     h33.append(button);
     div2.append(h33);
@@ -241,6 +244,9 @@ function fun(element){
 }
 
 
+let ele = JSON.parse(localStorage.getItem('project')) || [];
+
+
 // updating project
 
 let updateForm = document.getElementById('updateform');
@@ -263,7 +269,7 @@ updateForm.addEventListener('submit',()=>{
   };
 
 
-  let url = "http://localhost:8080/updateproject/"+ele.id;
+  let url = "http://localhost:8080/updateproject/"+userId;
 
   fetch(url,{
     method: 'PUT',
@@ -276,7 +282,9 @@ updateForm.addEventListener('submit',()=>{
     if(response.status == 401){
       window.location.href = "../login/login.html";
     }
-    location.reload(true);
+    popup.classList.remove('show-popup');
+    swal("Project Updated!", "Project Updated", "success");
+    func();
     return response.json();
   })
   console.log(date);
@@ -287,7 +295,7 @@ updateForm.addEventListener('submit',()=>{
 let deletebtn = document.getElementById('deletebtn');
 deletebtn.addEventListener('submit',()=>{
   event.preventDefault();
-  let deleteurl = "http://localhost:8080/deleteproject/"+ele.id;
+  let deleteurl = "http://localhost:8080/deleteproject/"+userId;
 
   fetch(deleteurl,{
     method: 'DELETE',
@@ -312,7 +320,7 @@ mark.addEventListener('click',()=>{
   event.preventDefault();
   if(!ele.completed){
     console.log('completed');
-    let progressurl = "http://localhost:8080/completeproject/"+ele.id
+    let progressurl = "http://localhost:8080/completeproject/"+userId
     fetch(progressurl,{
       method: 'PATCH',
       headers: {
@@ -416,14 +424,22 @@ userform.addEventListener('submit',()=>{
     if(response.status == 401){
       window.location.href = "/login/login.html";
     }
-    
+    else if(response.status == 400){
+      popupAdd.classList.remove('show-popup');
+      swal("Error", "Please check email once", "error");
+    }
+    else{
+      return response.json();
+    }
     // location.reload(true);
-    return response.json();
+    
   }).then(data=>{
       console.log(data);
       // element = data;
       // localStorage.setItem('project', JSON.stringify(data));
       popupAdd.classList.remove('show-popup');
+      swal("Good job!", `${data.name} is assigned to the project`, "success");
+      
       func();
   })
 
@@ -445,8 +461,9 @@ taskform.addEventListener('submit',()=>{
     "about": taskform.about.value,
     "closed": date
   };
+  let el = JSON.parse(localStorage.getItem('project'));
 
-  let url = "http://localhost:8080/AddTask/"+ele.projectName;
+  let url = "http://localhost:8080/AddTask/"+el.projectName;
   
   fetch(url, {
     method: 'POST',
@@ -458,6 +475,7 @@ taskform.addEventListener('submit',()=>{
   }).then(response=>{
     
     if(response.status == 401) location.href = '../login/login.html';
+    swal("Good job!", `You have added task successfully`, "success");
 
     return response.json();
   }).then(data=>{
@@ -466,3 +484,157 @@ taskform.addEventListener('submit',()=>{
   })
 
 })
+
+// search
+let t;
+function search(data, tag) {
+  t = tag;
+  let query = data.value;
+  tag.innerHTML = "";
+  let h3 = document.createElement('h3');
+  h3.textContent = 'People';
+  let users = document.createElement('div');
+  if (query == '' || query == " ") {
+    tag.style.display = 'none';
+
+  } else {
+    tag.style.display = 'block';
+    const apiUrl = 'http://localhost:8080/searchuser/' + query;
+    const request = new Request(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    fetch(request)
+      .then(response => {
+        if (response.status == 401) {
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(element => {
+          console.log(element);
+
+          let innerdiv = document.createElement('div');
+          let a = document.createElement('a');
+          a.textContent = element.name;
+          a.href = `UserProfile.html?userId=${element.username}`;
+          let img = document.createElement('img');
+          img.className = 'profile';
+          if (element.profileImage == null) {
+            img.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+          }
+          else {
+            img.src = `data:image/jpeg;base64,${element.profileImage}`;
+          }
+          innerdiv.append(img, a);
+          users.append(innerdiv);
+
+        });
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      projectsearch(tag, query)
+      tasksearch(tag, query)
+
+      tag.append(h3, users);
+
+      
+  }
+}
+
+function projectsearch(tag, query){
+
+  let h3p = document.createElement('h3');
+  h3p.textContent = 'Projects';
+  let project = document.createElement('div');
+
+  const apiUrl = 'http://localhost:8080/searchuserproject/' + query;
+    const request = new Request(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    fetch(request)
+      .then(response => {
+        if (response.status == 401) {
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(element => {
+          let innerdiv = document.createElement('div');
+          let a = document.createElement('a');
+          a.textContent = element.projectName;
+          a.href = `ProjectPage.html?userId=${element.id}`;
+          innerdiv.append(a);
+          project.append(innerdiv);
+        });
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      tag.append(h3p, project)
+
+}
+
+function tasksearch(tag, query){
+  let h3p = document.createElement('h3');
+  h3p.textContent = 'Tasks';
+  let project = document.createElement('div');
+  const apiUrl = 'http://localhost:8080/searchusertask/' + query;
+    const request = new Request(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    fetch(request)
+      .then(response => {
+        if (response.status == 401) {
+          console.error('Request failed with status:', response.status);
+          window.location.href = "../login/login.html";
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(element => {
+          let innerdiv = document.createElement('div');
+          let a = document.createElement('a');
+          a.textContent = element.taskName;
+          a.href = `TaskPage.html?userId=${element.id}`;
+          innerdiv.append(a);
+          project.append(innerdiv);
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+      tag.append(h3p, project)
+}
+
+document.body.addEventListener('click', function (event) {
+  const target = event.target;
+  // Check if the click target is outside the scrollable div
+
+  if (target !== t && !t.contains(target)) {
+    t.style.display = 'none';
+  }
+});

@@ -20,12 +20,14 @@ form.addEventListener('submit',(e)=>{
   }
   ).then(Response=> {
     if(Response.status == 401){
+      console.log(Response);
+      swal("Wrong Credeniels!", "Please enter correct username and password", "error");
       throw new Error("Login Failed");
     }
     let token = Response.headers.get('Authorization');
     console.log(token);
     localStorage.setItem('jwtToken', token);
     window.location.href = "../website/home.html";
-  }
-)
+    // return Response.json();
+  })
 });

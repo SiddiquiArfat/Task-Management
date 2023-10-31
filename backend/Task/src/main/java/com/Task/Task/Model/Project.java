@@ -24,11 +24,10 @@ public class Project {
     Integer id;
 
     @Column(unique = true)
-    @Size(min = 4, max = 17, message = "Project name should be between 4 and 9 Character")
+    @Size(min = 3, max = 35, message = "Project name should be between 4 and 9 Character")
     String projectName;
 
 //    @JsonIgnore
-
     @ManyToOne
     TaskUser admin;
 

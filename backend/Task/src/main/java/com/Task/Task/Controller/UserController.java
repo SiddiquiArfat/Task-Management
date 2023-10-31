@@ -55,10 +55,16 @@ public class UserController {
         return new ResponseEntity<>(us.addUser(user), HttpStatus.OK);
     }
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<TaskUser> signin(@RequestBody @Valid LoginDto dto) {
-//        return new ResponseEntity<>(us.login(dto), HttpStatus.OK);
-//    }
+    @GetMapping("/verify-account/{email}/{otp}")
+    public ResponseEntity<TaskUser> verifyAccount(@PathVariable("email") String email, @PathVariable("otp") String otp) {
+        return new ResponseEntity<>(us.verifyAccount(email, otp), HttpStatus.OK);
+    }
+
+    @GetMapping("/reotp/{email}")
+    public ResponseEntity<TaskUser> reotp(@PathVariable("email") String email) {
+        return new ResponseEntity<>(us.regenerateOtp(email), HttpStatus.OK);
+    }
+
 
     @PostMapping("/AddProject")
     public ResponseEntity<Project> AddProject(@RequestBody @Valid Project project, Principal principal) {
@@ -146,11 +152,11 @@ public class UserController {
 //    image upload
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+    public ResponseEntity<Void> handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
         TaskUser user = ur.findByUsername(principal.getName()).orElseThrow(()-> new UserException("User Not Found"));
         user.setProfileImage(file.getBytes());
         ur.save(user);
-        return "redirect:/profile";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/profile-image")
@@ -212,6 +218,10 @@ public class UserController {
     public ResponseEntity<TaskUser> profile(Principal principal){
         return new ResponseEntity<>(us.searchByUsername(principal.getName()), HttpStatus.OK);
     }
+    @GetMapping("/profile/{username}")
+    public ResponseEntity<TaskUser> uprofile(@PathVariable("username") String username){
+        return new ResponseEntity<>(us.searchByUsername(username), HttpStatus.OK);
+    }
 
     @GetMapping("/followers")
     public ResponseEntity<List<TaskUser>> follwers(Principal principal){
@@ -220,6 +230,15 @@ public class UserController {
     @GetMapping("/following")
     public ResponseEntity<List<TaskUser>> following(Principal principal){
         return new ResponseEntity<>(us.getFollowing(principal.getName()), HttpStatus.OK);
+    }
+
+    @GetMapping("/followers/{username}")
+    public ResponseEntity<List<TaskUser>> userfollwers(@PathVariable String username){
+        return new ResponseEntity<>(us.getFollowers(username), HttpStatus.OK);
+    }
+    @GetMapping("/following/{username}")
+    public ResponseEntity<List<TaskUser>> userfollowing(@PathVariable String username){
+        return new ResponseEntity<>(us.getFollowing(username), HttpStatus.OK);
     }
 
     @PatchMapping("/updateuser")
@@ -258,5 +277,22 @@ public class UserController {
     @GetMapping("/check/{uid}")
     public ResponseEntity<Boolean> check(Principal principal, @PathVariable("uid") Integer uid){
         return new ResponseEntity<>(us.check(principal.getName(), uid), HttpStatus.OK);
+    }
+    @GetMapping("/searchuser/{name}")
+    public ResponseEntity<List<TaskUser>> getUserSearch(@PathVariable("name") String name){
+        return new ResponseEntity<>(us.getSearchName(name), HttpStatus.OK);
+    }
+    @GetMapping("/searchuserproject/{email}")
+    public ResponseEntity<List<Project>> getUserSearchEmail(@PathVariable("email") String name, Principal principal){
+        return new ResponseEntity<>(us.getSearchProject(name, principal.getName()), HttpStatus.OK);
+    }
+    @GetMapping("/searchusertask/{email}")
+    public ResponseEntity<List<Task>> getUserSearchTask(@PathVariable("email") String name, Principal principal){
+        return new ResponseEntity<>(us.getSearchTask(name, principal.getName()), HttpStatus.OK);
+    }
+
+    @PostMapping("/contact")
+    public ResponseEntity<ContactPage> contact(@RequestBody ContactPage contactPage){
+        return new ResponseEntity<>(us.sendContact(contactPage), HttpStatus.OK);
     }
 }

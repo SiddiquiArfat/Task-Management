@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +27,7 @@ public class TaskUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Size(min = 4, max = 14, message = "Name contain character between 4 and 14")
+    @Size(min = 3, max = 35, message = "Name contain character between 4 and 14")
     String name;
 
     @Column(unique = true)
@@ -36,27 +37,25 @@ public class TaskUser {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
-
-
     @NotNull(message = "Please Select Role")
     @NotBlank(message = "Please Select Role")
     String role;
 
     @Lob
+    @Column(length = 3145728) // 3 * 1024 * 1024 bytes for 3 MB
     private byte[] profileImage;
 
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY)
-//    List<TaskUser> followers = new ArrayList<>();
-//
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY)
-//    List<TaskUser> following = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(mappedBy = "followers")
     List<TaskUser> following = new ArrayList<>();
 
+    @JsonIgnore
+    private String otp;
+
+    private boolean active;
+
+    @JsonIgnore
     @ManyToMany
     List<TaskUser> followers = new ArrayList<>();
 
@@ -67,8 +66,11 @@ public class TaskUser {
     String bio;
 
     @JsonIgnore
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime otpGeneratedTime;
+
+
+    @JsonIgnore
     @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Project> project = new ArrayList<>();
-
-
 }
