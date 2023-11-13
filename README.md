@@ -7,7 +7,7 @@
         src="https://img.freepik.com/free-vector/hand-drawn-illustration-business-planning_52683-76702.jpg?w=826&t=st=1699849955~exp=1699850555~hmac=84c2f8a26b73290cf1f337d8362f8661e0a02439d3dc06a7ba027cd882dbbe84"
         alt="error"
       />
-This project is an online customer service center built with Spring Boot. It provides a platform for customers to submit requests, complaints, and inquiries which can be resolved by our dedicated support team. It uses JPA for data persistence, MySQL for the database, and includes validation and web functionalities. The project also employs Lombok to minimize boilerplate code.
+TaskPulse is your ultimate task management solution, designed to simplify your life and enhance productivity. Our platform empowers you to effortlessly organize, prioritize, and track tasks while collaborating seamlessly with your team
 
 
 ## Tech Stack
