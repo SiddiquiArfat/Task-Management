@@ -29,7 +29,7 @@ TaskPulse is your ultimate task management solution, designed to simplify your l
 # To run this project locally:
 
 # Clone the repository and navigate to the directory
-git clone https://github.com/Prithvi333/Travel-Beyond.git](https://github.com/SiddiquiArfat/Task-Management.git
+git clone https://github.com/SiddiquiArfat/Task-Management.git
 cd Task-Management
 
 # Configure your MySQL credentials in application.properties
