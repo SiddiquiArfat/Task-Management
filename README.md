@@ -14,10 +14,8 @@ TaskPulse is your ultimate task management solution, designed to simplify your l
 
 #### Java | Spring Boot | Spring Framework | Spring Data JPA | Spring Security | Spring Boot Web | Validation | Logger | Slf4j | Spring Boot DevTools| Postman | MySQL Database | Maven | Swagger UI | Lombok |
 ## Modules
-- Login Module
-- Admin Module
-- Operator Module
-- Customer Module
+
+- User Module
 
 ## Prerequisites
 
